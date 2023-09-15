@@ -1,0 +1,96 @@
+import { Router } from "express";
+import fs from "fs";
+import multer from "multer";
+import { FOLDER_ID } from "../utils/config.js";
+import { drive } from "../utils/drive.js";
+
+export const FilesRouter = Router();
+
+const upload = multer({ dest: "uploads/" });
+
+FilesRouter.get("/list", async (req, res) => {
+  try {
+    const {
+      data: { files },
+    } = await drive.files.list({
+      q: `'${FOLDER_ID}' in parents`,
+      fields: "files(id, name)",
+    });
+
+    if (!files.length)
+      return res
+        .status(500)
+        .json({ error: "No se encontraron archivos en la carpeta." });
+
+    res.json(files);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Ocurrió un error al obtener la lista de archivos." });
+  }
+});
+
+FilesRouter.post("/upload", upload.any(), async (req, res) => {
+  const files = req.files;
+
+  try {
+    for (const file of files) {
+      const media = {
+        mimeType: file.mimetype,
+        body: fs.createReadStream(file.path),
+      };
+
+      const { data } = await drive.files.create({
+        media,
+        requestBody: {
+          name: file.originalname,
+          parents: [FOLDER_ID],
+        },
+      });
+
+      fs.unlinkSync(file.path);
+      console.log(`Uploaded ${file.originalname} with ID: ${data.id}`);
+    }
+    res.json({ message: "Archivos subidos con éxito." });
+  } catch (error) {
+    res.status(500).json({ error: "Ocurrió un error al subir archivos." });
+  }
+});
+
+FilesRouter.get("/download/:fileId", async (req, res) => {
+  const fileId = req.params.fileId;
+
+  try {
+    const {
+      data: { name, mimeType },
+    } = await drive.files.get({ fileId });
+
+    const response = await drive.files.get(
+      {
+        fileId,
+        alt: "media",
+      },
+      { responseType: "stream" }
+    );
+
+    const fileName = name || "resultados";
+    res.setHeader("Content-disposition", `attachment; filename="${fileName}"`);
+    res.setHeader("Content-type", mimeType);
+    response.data.pipe(res);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Ocurrió un error al descargar el archivo." });
+  }
+});
+
+FilesRouter.delete("/remove/:fileId", async (req, res) => {
+  const fileId = req.params.fileId;
+
+  try {
+    await drive.files.delete({ fileId });
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: "Ocurrió un error al eliminar el archivo." });
+  }
+});
