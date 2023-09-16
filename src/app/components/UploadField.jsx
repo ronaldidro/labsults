@@ -1,6 +1,6 @@
 const UploadField = ({ handleFileChange, handleUpload }) => (
   <>
-    <input type="file" multiple onChange={handleFileChange} />
+    <input type="file" onChange={handleFileChange} />
     <button onClick={handleUpload}>Subir Archivos</button>
   </>
 );
