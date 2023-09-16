@@ -26,7 +26,7 @@ FilesRouter.get("/", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ error: "Ocurrió un error al obtener la lista de archivos." });
+      .json({ error: `Error al obtener lista de archivos: ${error}` });
   }
 });
 
@@ -51,9 +51,7 @@ FilesRouter.get("/download/:fileId", async (req, res) => {
     res.setHeader("Content-type", mimeType);
     response.data.pipe(res);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Ocurrió un error al descargar el archivo." });
+    res.status(500).json({ error: `Error al descargar archivo: ${error}` });
   }
 });
 
@@ -89,6 +87,6 @@ FilesRouter.delete("/:fileId", async (req, res) => {
     await drive.files.delete({ fileId });
     res.json({ id: fileId }).status(204);
   } catch (error) {
-    res.status(500).json({ error: "Ocurrió un error al eliminar el archivo." });
+    res.status(500).json({ error: `Error al eliminar archivo: ${error}` });
   }
 });
