@@ -8,7 +8,7 @@ export const FilesRouter = Router();
 
 const upload = multer({ dest: "uploads/" });
 
-FilesRouter.get("/list", async (req, res) => {
+FilesRouter.get("/", async (req, res) => {
   try {
     const {
       data: { files },
@@ -27,33 +27,6 @@ FilesRouter.get("/list", async (req, res) => {
     res
       .status(500)
       .json({ error: "Ocurrió un error al obtener la lista de archivos." });
-  }
-});
-
-FilesRouter.post("/upload", upload.any(), async (req, res) => {
-  const files = req.files;
-
-  try {
-    for (const file of files) {
-      const media = {
-        mimeType: file.mimetype,
-        body: fs.createReadStream(file.path),
-      };
-
-      const { data } = await drive.files.create({
-        media,
-        requestBody: {
-          name: file.originalname,
-          parents: [FOLDER_ID],
-        },
-      });
-
-      fs.unlinkSync(file.path);
-      console.log(`Uploaded ${file.originalname} with ID: ${data.id}`);
-    }
-    res.json({ message: "Archivos subidos con éxito." });
-  } catch (error) {
-    res.status(500).json({ error: "Ocurrió un error al subir archivos." });
   }
 });
 
@@ -84,12 +57,37 @@ FilesRouter.get("/download/:fileId", async (req, res) => {
   }
 });
 
-FilesRouter.delete("/remove/:fileId", async (req, res) => {
+FilesRouter.post("/upload", upload.single("file"), async (req, res) => {
+  const file = req.file;
+
+  try {
+    const media = {
+      mimeType: file.mimetype,
+      body: fs.createReadStream(file.path),
+    };
+
+    const { data } = await drive.files.create({
+      media,
+      requestBody: {
+        name: file.originalname,
+        parents: [FOLDER_ID],
+      },
+    });
+
+    fs.unlinkSync(file.path);
+
+    res.json({ id: data.id, name: file.originalname });
+  } catch (error) {
+    res.status(500).json({ error: `Error al subir archivo: ${error}` });
+  }
+});
+
+FilesRouter.delete("/:fileId", async (req, res) => {
   const fileId = req.params.fileId;
 
   try {
     await drive.files.delete({ fileId });
-    res.status(204).send();
+    res.json({ id: fileId }).status(204);
   } catch (error) {
     res.status(500).json({ error: "Ocurrió un error al eliminar el archivo." });
   }
