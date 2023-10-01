@@ -7,6 +7,7 @@ import { api } from "./src/api/index.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isTest = process.env.VITEST;
+const PORT = process.env.PORT || 3000;
 
 export async function createServer(
   root = process.cwd(),
@@ -110,8 +111,8 @@ export async function createServer(
 
 if (!isTest) {
   createServer().then(({ app }) =>
-    app.listen(5173, () => {
-      console.log(`Server running at http://localhost:5173/`);
+    app.listen(PORT, () => {
+      console.log(`Server running at http://localhost:${PORT}/`);
     })
   );
 }
