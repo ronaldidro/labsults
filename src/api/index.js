@@ -1,14 +1,14 @@
 import express from "express";
 // import "express-async-errors";
 import morgan from "morgan";
-import { errorHandler, unknownEndpoint } from "./middleware/index.js";
+import { connectToDatabase } from "./db/index.js";
 import { router } from "./routes.js";
 import { DEV_MODE } from "./utils/config.js";
-// import { connectToDatabase } from "./utils/db.js";
+import { errorHandler, unknownEndpoint } from "./utils/middleware.js";
 
 export const api = express();
 
-// connectToDatabase();
+connectToDatabase();
 
 if (DEV_MODE) {
   morgan.token("body", (req) => JSON.stringify(req.body));
