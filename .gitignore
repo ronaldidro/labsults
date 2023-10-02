@@ -4,3 +4,4 @@ uploads
 
 .env
 credentials.json
+test-db.js
