@@ -7,8 +7,24 @@ config();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const DEV_MODE = process.env.NODE_ENV === "development";
+const PRD_MODE = process.env.NODE_ENV === "production";
+const TEST_MODE = process.env.NODE_ENV === "test";
+const DATABASE_URL = DEV_MODE
+  ? process.env.DEV_DATABASE_URL
+  : TEST_MODE
+  ? process.env.TEST_DATABASE_URL
+  : process.env.DATABASE_URL;
 const FOLDER_ID = process.env.FOLDER_ID;
-const KEYFILEPATH = resolve(__dirname, "../../../credentials.json");
+const SECRET = process.env.SECRET;
+const KEY_FILE_PATH = resolve(__dirname, "../../../credentials.json");
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
 
-export { DEV_MODE, FOLDER_ID, KEYFILEPATH, SCOPES };
+export {
+  DATABASE_URL,
+  DEV_MODE,
+  FOLDER_ID,
+  KEY_FILE_PATH,
+  PRD_MODE,
+  SCOPES,
+  SECRET,
+};

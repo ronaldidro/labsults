@@ -1,8 +1,8 @@
 import { google } from "googleapis";
-import { KEYFILEPATH, SCOPES } from "./config.js";
+import { KEY_FILE_PATH, SCOPES } from "./config.js";
 
 const auth = new google.auth.GoogleAuth({
-  keyFile: KEYFILEPATH,
+  keyFile: KEY_FILE_PATH,
   scopes: SCOPES,
 });
 
