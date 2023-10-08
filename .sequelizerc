@@ -1,0 +1,10 @@
+const { resolve } = require("path");
+
+const apiFolder = "src/api";
+const dbFolder = `${apiFolder}/db`;
+
+module.exports = {
+  config: resolve(`${dbFolder}/config`, "database.js"),
+  "seeders-path": resolve(dbFolder, "seeders"),
+  "migrations-path": resolve(dbFolder, "migrations"),
+};
