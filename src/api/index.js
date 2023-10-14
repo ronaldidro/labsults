@@ -1,5 +1,5 @@
 import express from "express";
-// import "express-async-errors";
+import "express-async-errors";
 import morgan from "morgan";
 import { connectToDatabase } from "./db/index.js";
 import { router } from "./routes.js";

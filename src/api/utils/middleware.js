@@ -6,12 +6,17 @@ const unknownEndpoint = (_req, res) =>
   res.status(404).send({ error: "unknown endpoint" });
 
 const errorHandler = (error, _req, res, next) => {
-  logger("=*= Error Handler =*=", error.name, error.message);
+  logger(`<== Error Handler ==> ${error.name}: ${error.message}`);
 
-  if (error.name === "JsonWebTokenError")
-    return res.status(422).json({ error: "invalid token" });
+  if (error.name === "SequelizeDatabaseError")
+    return res.status(422).json({ errors: error.message });
 
-  next(error);
+  if (error.name.includes("Sequelize"))
+    return res
+      .status(400)
+      .json({ errors: error.errors.map((error) => error.message) });
+
+  return res.status(422).json({ error: error.message });
 };
 
 const tokenExtractor = (req, res, next) => {
