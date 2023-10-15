@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import { Router } from 'express'
 import User from '../models/user.js'
+import { tokenExtractor } from '../utils/middleware.js'
 
 export const UsersRouter = Router()
 
@@ -33,7 +34,7 @@ UsersRouter.post('/', async (req, res) => {
   res.json(user)
 })
 
-UsersRouter.patch('/:id', userFinder, async (req, res) => {
+UsersRouter.patch('/:id', tokenExtractor, userFinder, async (req, res) => {
   let passwordHash = ''
 
   if (req.body.password) passwordHash = await getPasswordHash(req.body.password)
@@ -44,7 +45,7 @@ UsersRouter.patch('/:id', userFinder, async (req, res) => {
   res.json(req.user)
 })
 
-UsersRouter.delete('/:id', userFinder, async (req, res) => {
+UsersRouter.delete('/:id', tokenExtractor, userFinder, async (req, res) => {
   await req.user.destroy()
   res.status(204).end()
 })
