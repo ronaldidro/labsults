@@ -7,7 +7,8 @@ const unknownEndpoint = (_req, res) => res.status(404).send({ error: 'unknown en
 const errorHandler = (error, _req, res, _next) => {
   logger(`<== Error Handler ==> ${error.name}: ${error.message}`)
 
-  if (error.name === 'SequelizeDatabaseError') return res.status(422).json({ errors: error.message })
+  if (error.name === 'SequelizeDatabaseError' || error.name === 'SequelizeEagerLoadingError')
+    return res.status(500).json({ errors: error.message })
 
   if (error.name.includes('Sequelize'))
     return res.status(400).json({ errors: error.errors.map(error => error.message) })
