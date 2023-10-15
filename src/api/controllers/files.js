@@ -1,92 +1,87 @@
-import { Router } from "express";
-import fs from "fs";
-import multer from "multer";
-import { FOLDER_ID } from "../utils/config.js";
-import { drive } from "../utils/drive.js";
+import { Router } from 'express'
+import fs from 'fs'
+import multer from 'multer'
+import { FOLDER_ID } from '../utils/config.js'
+import { drive } from '../utils/drive.js'
 
-export const FilesRouter = Router();
+export const FilesRouter = Router()
 
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: 'uploads/' })
 
-FilesRouter.get("/", async (req, res) => {
+FilesRouter.get('/', async (req, res) => {
   try {
     const {
-      data: { files },
+      data: { files }
     } = await drive.files.list({
       q: `'${FOLDER_ID}' in parents`,
-      fields: "files(id, name)",
-    });
+      fields: 'files(id, name)'
+    })
 
-    if (!files.length)
-      return res
-        .status(500)
-        .json({ error: "No se encontraron archivos en la carpeta." });
+    if (!files.length) return res.status(500).json({ error: 'No se encontraron archivos en la carpeta.' })
 
-    res.json(files);
+    res.json(files)
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: `Error al obtener lista de archivos: ${error}` });
+    res.status(500).json({ error: `Error al obtener lista de archivos: ${error}` })
   }
-});
+})
 
-FilesRouter.get("/download/:fileId", async (req, res) => {
-  const fileId = req.params.fileId;
+FilesRouter.get('/download/:fileId', async (req, res) => {
+  const fileId = req.params.fileId
 
   try {
     const {
-      data: { name, mimeType },
-    } = await drive.files.get({ fileId });
+      data: { name, mimeType }
+    } = await drive.files.get({ fileId })
 
     const response = await drive.files.get(
       {
         fileId,
-        alt: "media",
+        alt: 'media'
       },
-      { responseType: "stream" }
-    );
+      { responseType: 'stream' }
+    )
 
-    const fileName = name || "resultados";
-    res.setHeader("Content-disposition", `attachment; filename="${fileName}"`);
-    res.setHeader("Content-type", mimeType);
-    response.data.pipe(res);
+    const fileName = name || 'resultados'
+    res.setHeader('Content-disposition', `attachment; filename="${fileName}"`)
+    res.setHeader('Content-type', mimeType)
+    response.data.pipe(res)
   } catch (error) {
-    res.status(500).json({ error: `Error al descargar archivo: ${error}` });
+    res.status(500).json({ error: `Error al descargar archivo: ${error}` })
   }
-});
+})
 
-FilesRouter.post("/upload", upload.single("file"), async (req, res) => {
-  const file = req.file;
+FilesRouter.post('/upload', upload.single('file'), async (req, res) => {
+  const file = req.file
 
   try {
     const media = {
       mimeType: file.mimetype,
-      body: fs.createReadStream(file.path),
-    };
+      body: fs.createReadStream(file.path)
+    }
 
     const { data } = await drive.files.create({
       media,
       requestBody: {
         name: file.originalname,
-        parents: [FOLDER_ID],
-      },
-    });
+        parents: [FOLDER_ID]
+      }
+    })
 
-    fs.unlinkSync(file.path);
+    fs.unlinkSync(file.path)
 
-    res.json({ id: data.id, name: file.originalname });
+    res.json({ id: data.id, name: file.originalname })
   } catch (error) {
-    res.status(500).json({ error: `Error al subir archivo: ${error}` });
+    res.status(500).json({ error: `Error al subir archivo: ${error}` })
   }
-});
+})
 
-FilesRouter.delete("/:fileId", async (req, res) => {
-  const fileId = req.params.fileId;
+FilesRouter.delete('/:fileId', async (req, res) => {
+  const fileId = req.params.fileId
 
   try {
-    await drive.files.delete({ fileId });
-    res.json({ id: fileId }).status(204);
+    await drive.files.delete({ fileId })
+    res.json({ id: fileId }).status(204)
   } catch (error) {
-    res.status(500).json({ error: `Error al eliminar archivo: ${error}` });
+    res.status(500).json({ error: `Error al eliminar archivo: ${error}` })
   }
-});
+})

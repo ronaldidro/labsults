@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios'
 
-const apiConfig = axios.create({ baseURL: "/api" });
+const apiConfig = axios.create({ baseURL: '/api' })
 
-const request = (options = {}) => apiConfig.request({ ...options });
+const request = (options = {}) => apiConfig.request({ ...options })
 
-export default request;
+export default request

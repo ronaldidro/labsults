@@ -1,51 +1,51 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize } = require('sequelize')
 
-const up = async (queryInterface) => {
-  await queryInterface.createTable("notes", {
+const up = async queryInterface => {
+  await queryInterface.createTable('notes', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     content: {
       type: Sequelize.TEXT,
-      allowNull: false,
+      allowNull: false
     },
     important: {
-      type: Sequelize.BOOLEAN,
+      type: Sequelize.BOOLEAN
     },
     date: {
-      type: Sequelize.DATE,
-    },
-  });
+      type: Sequelize.DATE
+    }
+  })
 
-  await queryInterface.createTable("authors", {
+  await queryInterface.createTable('authors', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     username: {
       type: Sequelize.STRING,
       unique: true,
-      allowNull: false,
+      allowNull: false
     },
     name: {
       type: Sequelize.STRING,
-      allowNull: false,
-    },
-  });
+      allowNull: false
+    }
+  })
 
-  await queryInterface.addColumn("notes", "author_id", {
+  await queryInterface.addColumn('notes', 'author_id', {
     type: Sequelize.INTEGER,
     allowNull: false,
-    references: { model: "authors", key: "id" },
-  });
-};
+    references: { model: 'authors', key: 'id' }
+  })
+}
 
-const down = async (queryInterface) => {
-  await queryInterface.dropTable("notes");
-  await queryInterface.dropTable("authors");
-};
+const down = async queryInterface => {
+  await queryInterface.dropTable('notes')
+  await queryInterface.dropTable('authors')
+}
 
-module.exports = { up, down };
+module.exports = { up, down }

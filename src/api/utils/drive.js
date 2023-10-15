@@ -1,9 +1,9 @@
-import { google } from "googleapis";
-import { KEY_FILE_PATH, SCOPES } from "./config.js";
+import { google } from 'googleapis'
+import { KEY_FILE_PATH, SCOPES } from './config.js'
 
 const auth = new google.auth.GoogleAuth({
   keyFile: KEY_FILE_PATH,
-  scopes: SCOPES,
-});
+  scopes: SCOPES
+})
 
-export const drive = google.drive({ version: "v3", auth });
+export const drive = google.drive({ version: 'v3', auth })

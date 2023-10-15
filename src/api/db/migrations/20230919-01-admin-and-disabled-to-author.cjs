@@ -1,20 +1,20 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize } = require('sequelize')
 
-const up = async (queryInterface) => {
-  await queryInterface.addColumn("authors", "admin", {
+const up = async queryInterface => {
+  await queryInterface.addColumn('authors', 'admin', {
     type: Sequelize.BOOLEAN,
-    default: false,
-  });
+    default: false
+  })
 
-  await queryInterface.addColumn("authors", "disabled", {
+  await queryInterface.addColumn('authors', 'disabled', {
     type: Sequelize.BOOLEAN,
-    default: false,
-  });
-};
+    default: false
+  })
+}
 
-const down = async (queryInterface) => {
-  await queryInterface.removeColumn("authors", "admin");
-  await queryInterface.removeColumn("authors", "disabled");
-};
+const down = async queryInterface => {
+  await queryInterface.removeColumn('authors', 'admin')
+  await queryInterface.removeColumn('authors', 'disabled')
+}
 
-module.exports = { up, down };
+module.exports = { up, down }

@@ -1,16 +1,16 @@
-const up = async (queryInterface) => {
-  await queryInterface.bulkInsert("authors", [
+const up = async queryInterface => {
+  await queryInterface.bulkInsert('authors', [
     {
-      username: "mluukkai",
-      name: "Matti Luukkainen",
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
       admin: true,
-      disabled: false,
-    },
-  ]);
-};
+      disabled: false
+    }
+  ])
+}
 
-const down = async (queryInterface) => {
-  await queryInterface.bulkDelete("authors", null, {});
-};
+const down = async queryInterface => {
+  await queryInterface.bulkDelete('authors', null, {})
+}
 
-module.exports = { up, down };
+module.exports = { up, down }

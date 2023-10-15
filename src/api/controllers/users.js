@@ -1,51 +1,50 @@
-import bcrypt from "bcrypt";
-import { Router } from "express";
-import User from "../models/user.js";
+import bcrypt from 'bcrypt'
+import { Router } from 'express'
+import User from '../models/user.js'
 
-export const UsersRouter = Router();
+export const UsersRouter = Router()
 
-const getPasswordHash = (password) => bcrypt.hash(password, 10);
+const getPasswordHash = password => bcrypt.hash(password, 10)
 
 const userFinder = async (req, res, next) => {
   req.user = await User.findByPk(req.params.id, {
-    attributes: { exclude: ["password", "createdAt", "updatedAt"] },
-  });
+    attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+  })
 
-  if (!req.user) return res.status(404).end();
+  if (!req.user) return res.status(404).json({ error: 'user not found' })
 
-  next();
-};
+  next()
+}
 
-UsersRouter.get("/", async (req, res) => {
+UsersRouter.get('/', async (req, res) => {
   const users = await User.findAll({
-    attributes: ["id", "document_number", "first_names", "last_names"],
-  });
+    attributes: ['id', 'document_number', 'first_names', 'last_names']
+  })
 
-  res.json(users);
-});
+  res.json(users)
+})
 
-UsersRouter.get("/:id", userFinder, async (req, res) => res.json(req.user));
+UsersRouter.get('/:id', userFinder, async (req, res) => res.json(req.user))
 
-UsersRouter.post("/", async (req, res) => {
-  const passwordHash = await getPasswordHash(req.body.password);
-  const user = await User.create({ ...req.body, password: passwordHash });
+UsersRouter.post('/', async (req, res) => {
+  const passwordHash = await getPasswordHash(req.body.password)
+  const user = await User.create({ ...req.body, password: passwordHash })
 
-  res.json(user);
-});
+  res.json(user)
+})
 
-UsersRouter.patch("/:id", userFinder, async (req, res) => {
-  let passwordHash = "";
+UsersRouter.patch('/:id', userFinder, async (req, res) => {
+  let passwordHash = ''
 
-  if (req.body.password)
-    passwordHash = await getPasswordHash(req.body.password);
+  if (req.body.password) passwordHash = await getPasswordHash(req.body.password)
 
-  const password = req.body.password ? passwordHash : req.user.password;
+  const password = req.body.password ? passwordHash : req.user.password
 
-  await req.user.update({ ...req.body, password });
-  res.json(req.user);
-});
+  await req.user.update({ ...req.body, password })
+  res.json(req.user)
+})
 
-UsersRouter.delete("/:id", userFinder, async (req, res) => {
-  await req.user.destroy();
-  res.status(204).end();
-});
+UsersRouter.delete('/:id', userFinder, async (req, res) => {
+  await req.user.destroy()
+  res.status(204).end()
+})

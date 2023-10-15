@@ -7,7 +7,7 @@ const ResultsTable = ({ files, handleDownload, handleDelete }) => (
       </tr>
     </thead>
     <tbody>
-      {files.map((file) => (
+      {files.map(file => (
         <tr key={file.id}>
           <td>{file.name}</td>
           <td>
@@ -18,6 +18,6 @@ const ResultsTable = ({ files, handleDownload, handleDelete }) => (
       ))}
     </tbody>
   </table>
-);
+)
 
-export default ResultsTable;
+export default ResultsTable

@@ -1,25 +1,25 @@
-const up = async (queryInterface) => {
-  await queryInterface.bulkInsert("roles", [
+const up = async queryInterface => {
+  await queryInterface.bulkInsert('roles', [
     {
-      name: "Administrador",
+      name: 'Administrador',
       created_at: new Date(),
-      updated_at: new Date(),
+      updated_at: new Date()
     },
     {
-      name: "Colaborador",
+      name: 'Colaborador',
       created_at: new Date(),
-      updated_at: new Date(),
+      updated_at: new Date()
     },
     {
-      name: "Paciente",
+      name: 'Paciente',
       created_at: new Date(),
-      updated_at: new Date(),
-    },
-  ]);
-};
+      updated_at: new Date()
+    }
+  ])
+}
 
-const down = async (queryInterface) => {
-  await queryInterface.bulkDelete("roles", null, {});
-};
+const down = async queryInterface => {
+  await queryInterface.bulkDelete('roles', null, {})
+}
 
-module.exports = { up, down };
+module.exports = { up, down }

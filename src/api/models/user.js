@@ -1,5 +1,5 @@
-import { DataTypes, Model } from "sequelize";
-import { sequelize } from "../db/index.js";
+import { DataTypes, Model } from 'sequelize'
+import { sequelize } from '../db/index.js'
 
 class User extends Model {}
 
@@ -8,7 +8,7 @@ User.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     document_number: {
       type: DataTypes.STRING,
@@ -16,48 +16,48 @@ User.init(
       unique: true,
       validate: {
         isNumeric: true,
-        len: [8, 8],
-      },
+        len: [8, 8]
+      }
     },
     first_names: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         isAlpha: true,
-        notEmpty: true,
-      },
+        notEmpty: true
+      }
     },
     last_names: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         isAlpha: true,
-        notEmpty: true,
-      },
+        notEmpty: true
+      }
     },
     cellphone: {
       type: DataTypes.STRING,
       validate: {
         isNumeric: true,
         notEmpty: true,
-        len: [9, 9],
-      },
+        len: [9, 9]
+      }
     },
     born_date: {
       type: DataTypes.DATEONLY,
       allowNull: false,
       validate: {
         isDate: true,
-        notEmpty: true,
-      },
+        notEmpty: true
+      }
     },
     genre: {
-      type: DataTypes.ENUM("male", "female"),
+      type: DataTypes.ENUM('male', 'female'),
       allowNull: false,
       validate: {
         notEmpty: true,
-        isIn: [["male", "female"]],
-      },
+        isIn: [['male', 'female']]
+      }
     },
     username: {
       type: DataTypes.STRING,
@@ -65,22 +65,22 @@ User.init(
       allowNull: false,
       validate: {
         isAlphanumeric: true,
-        notEmpty: true,
-      },
+        notEmpty: true
+      }
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: true,
-      },
-    },
+        notEmpty: true
+      }
+    }
   },
   {
     sequelize,
     underscored: true,
-    modelName: "user",
+    modelName: 'user'
   }
-);
+)
 
-export default User;
+export default User
