@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const ResultsTable = ({ files, handleDownload, handleDelete }) => (
   <table>
     <thead>
@@ -19,5 +21,11 @@ const ResultsTable = ({ files, handleDownload, handleDelete }) => (
     </tbody>
   </table>
 )
+
+ResultsTable.propTypes = {
+  files: PropTypes.array.isRequired,
+  handleDownload: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired
+}
 
 export default ResultsTable
