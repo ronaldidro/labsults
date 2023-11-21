@@ -3,6 +3,7 @@ import AuthorNotes from './author_notes.js'
 import Membership from './membership.js'
 import Module from './module.js'
 import Note from './note.js'
+import Person from './person.js'
 import Role from './role.js'
 import RoleModules from './role_modules.js'
 import Team from './team.js'
@@ -24,4 +25,7 @@ Role.belongsToMany(User, { through: UserRoles })
 Role.belongsToMany(Module, { through: RoleModules })
 Module.belongsToMany(Role, { through: RoleModules })
 
-export { Author, AuthorNotes, Membership, Module, Note, Role, Team, User }
+User.hasMany(Person)
+Person.belongsTo(User)
+
+export { Author, AuthorNotes, Membership, Module, Note, Person, Role, Team, User }

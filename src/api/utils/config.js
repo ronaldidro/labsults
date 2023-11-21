@@ -16,7 +16,8 @@ const DATABASE_URL = DEV_MODE
   : process.env.DATABASE_URL
 const FOLDER_ID = process.env.FOLDER_ID
 const SECRET = process.env.SECRET
+const GQL_PORT = process.env.VITE_GQL_PORT
 const KEY_FILE_PATH = resolve(__dirname, '../../../credentials.json')
 const SCOPES = ['https://www.googleapis.com/auth/drive']
 
-export { DATABASE_URL, DEV_MODE, FOLDER_ID, KEY_FILE_PATH, PRD_MODE, SCOPES, SECRET }
+export { DATABASE_URL, DEV_MODE, FOLDER_ID, GQL_PORT, KEY_FILE_PATH, PRD_MODE, SCOPES, SECRET }
